@@ -1,0 +1,26 @@
+{
+  "name": "challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel src --out-dir build --extensions '.ts'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/node": "^7.8.7",
+    "@types/jest": "^25.2.1",
+    "@types/lodash": "^4.14.150",
+    "jest": "^26.0.1",
+    "lodash": "^4.17.15",
+    "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/preset-typescript": "^7.9.0"
+  }
+}
