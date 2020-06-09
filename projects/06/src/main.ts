@@ -1,13 +1,10 @@
-import parse from './parser';
+import assemble from './assembler';
 
-console.log(parse(`
-@1
-M=1
+console.log(assemble(`
 @2
-A=0
-A=A+D;JGT
-//bananaphone
-
-@6
-0;JMP
+D=A
+@3
+D=D+A
+@0
+M=D
 `));
