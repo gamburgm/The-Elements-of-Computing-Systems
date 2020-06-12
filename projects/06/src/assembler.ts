@@ -1,6 +1,34 @@
 import parse from "./parser"
 import { Command } from "./types";
 
+const MEM_LOC = 16;
+
+const BASE_TABLE: Record<string, number> = {
+  'SP': 0,
+  'LCL': 1,
+  'ARG': 2,
+  'THIS': 3,
+  'THAT': 4,
+  'R0': 0,
+  'R1': 1,
+  'R2': 2,
+  'R3': 3,
+  'R4': 4,
+  'R5': 5,
+  'R6': 6,
+  'R7': 7,
+  'R8': 8,
+  'R9': 9,
+  'R10': 10,
+  'R11': 11,
+  'R12': 12,
+  'R13': 13,
+  'R14': 14,
+  'R15': 15,
+  'SCREEN': 16384,
+  'KBD': 24576,
+};
+
 const compMap: Record<string, string> = {
     "0": "0101010",
     "1": "0111111",
@@ -61,20 +89,45 @@ function dec2bin(dec: number): string{
     return converted;
 }
 
-
-function interpret(command: Command): string {
-    let interpreted = "";
-    if (command.kind === "A") {
-        return `0${dec2bin(command.addr)}`;
-    }else if (command.kind === "C") {
-        let dest = command.dest ? destMap[command.dest] : "000";
-        let jump = command.jump ? jumpMap[command.jump] : "000";
-        return `111${compMap[command.comp]}${dest}${jump}`
+function buildTable(ast: Command[], table: Record<string, number>): void {
+  let idx = 0;
+  ast.forEach((cmd: Command) => {
+    if (cmd.kind === 'L') {
+      table[cmd.symbol] = idx;
+    } else {
+      idx += 1;
     }
+  });
+}
 
-    return interpreted;
+function interpret(command: Command, table: Record<string, number>, memLoc: number): [string, number] {
+  if (command.kind === "A") {
+    if (typeof(command.addr) === 'string') {
+      if (command.addr in table) {
+        return [`0${dec2bin(table[command.addr])}`, memLoc];
+      } else {
+        table[command.addr] = memLoc;
+        return [`0${dec2bin(table[command.addr])}`, memLoc + 1];
+      }
+    } else {
+      return [`0${dec2bin(command.addr)}`, memLoc];
+    }
+  } else if (command.kind === "C") {
+    let dest = command.dest ? destMap[command.dest] : "000";
+    let jump = command.jump ? jumpMap[command.jump] : "000";
+    return [`111${compMap[command.comp]}${dest}${jump}`, memLoc];
+  }
 }
 
 export default function assemble(code: string): string {
-    return parse(code).map(interpret).join("\n");
+  let ast: Command[] = parse(code);
+  buildTable(ast, BASE_TABLE);
+
+  let memLoc = MEM_LOC;
+  let binary: string;
+
+  return ast.filter((c: Command) => c.kind !== 'L').map((c: Command) => {
+    [binary, memLoc] = interpret(c, BASE_TABLE, memLoc);
+    return binary;
+  }).join('\n');
 }

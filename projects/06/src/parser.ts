@@ -1,16 +1,32 @@
 import { Command, Register, Jump, CCommand } from './types';
 
 export default function parse(commands: string): Command[] {
-  return commands.split('\n').map(parseCmd).filter((v: Command) => v !== null);
+  return commands.split('\n').map((str: string) => parseCmd(str.trim())).filter((v: Command) => v !== null);
 }
 
 function parseCmd(cmd: string): Command {
   if (cmd.length === 0) return null;
   else if (cmd[0] === '/') return null;
   else if (cmd[0] === '@') {
+    let variable = cmd.slice(1);
+    let parsedVar = parseInt(variable);
+    let addr: string | number;
+
+    if (isNaN(parsedVar)) {
+      addr = variable;
+    } else {
+      addr = parsedVar;
+    }
+
     return {
       kind: 'A',
-      addr: parseInt(cmd.slice(1)),
+      addr,
+    };
+  } else if (cmd[0] === '(') {
+    let closeIdx = cmd.indexOf(')');
+    return {
+      kind: 'L',
+      symbol: cmd.slice(1, closeIdx),
     };
   } else {
     return parseCCommand(cmd);

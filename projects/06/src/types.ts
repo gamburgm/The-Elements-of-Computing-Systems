@@ -33,11 +33,11 @@ export type MemLoc = 'SP'
 
 export type Register = 'A' | 'M' | 'D';
 
-export type Command = ACommand | CCommand;
+export type Command = ACommand | CCommand | LCommand;
 
 export interface ACommand {
   kind: 'A',
-  addr: number,
+  addr: string | number,
 }
 
 export interface CCommand {
@@ -45,6 +45,11 @@ export interface CCommand {
   dest?: Register,
   comp: Comp,
   jump?: Jump,
+}
+
+export interface LCommand {
+  kind: 'L',
+  symbol: string,
 }
 
 export type Comp = string;
