@@ -43,3 +43,18 @@ and
 push constant 82
 or
 not
+
+// EQ
+@0
+@M
+D=M
+@0
+M=M-1
+@M
+...;JEQ
+--> push 0 onto the stack
+(CONTINUE)
+
+(PUSH)
+--> push 1 onto the stack
+--> jump to CONTINUE

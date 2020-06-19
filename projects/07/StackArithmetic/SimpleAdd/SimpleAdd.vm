@@ -7,3 +7,45 @@
 push constant 7
 push constant 8
 add
+
+--------
+STACK == 256-2047
+RAM[0] = 256 (initially)
+
+// PUSH
+@7   // Loads 7 into A
+D=A  // D contains 7
+@0   // Loads the stack pointer into M
+@M   // Loads the correct stack location into A (and M)
+M=D  // Put 7 into M
+@0   // Load the stack pointer
+M=M+1// subtract it by 1
+
+// ADD
+@0   // Get the stack pointer
+@M   // Get the top of the stack
+D=M  // Set D to the value at the top of the stack
+@0
+M=M-1
+@M
+M=D+M
+
+
+
+
+
+
+
+
+@7
+contents of memory = wherever 7 currently lives
+stack pointer = stack pointer + 1
+@8
+contents of memory = wherever 8 currently lives
+stack pointer = stack pointer + 1
+@current contents of M
+load that into some arbitrary register R1
+stack pointer = stack pointer - 1
+@current contents of M
+load that into some arbitrary register R2
+replace contents of M with R1 + R2
