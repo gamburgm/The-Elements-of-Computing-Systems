@@ -51,10 +51,31 @@ D=M
 @0
 M=M-1
 @M
-...;JEQ
---> push 0 onto the stack
-(CONTINUE)
+D=M-D
+@PUSH[some number]
+M;JEQ
+@0
+D=A
+@0
+@M
+M=D
+@CONTINUE[some number]
+0;JMP
 
 (PUSH)
---> push 1 onto the stack
---> jump to CONTINUE
+@1
+D=A
+@0
+@M
+M=D
+@CONTINUE[some number]
+0;JMP
+
+(CONTINUE)
+... the rest of the commands
+
+
+// AND
+D=D|M
+D=D&M
+=> JNE instead of JEQ

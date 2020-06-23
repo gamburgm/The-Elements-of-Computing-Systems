@@ -1,7 +1,8 @@
-import { parse } from "./parser";
+import { vm } from "./vm";
+import { parse } from './parser';
 
 
-console.log(parse(
+console.log(vm(parse(
     `// This file is part of www.nand2tetris.org
     // and the book "The Elements of Computing Systems"
     // by Nisan and Schocken, MIT Press.
@@ -48,4 +49,4 @@ console.log(parse(
     or
     not
     `
-))
+)))
